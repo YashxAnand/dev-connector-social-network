@@ -41,6 +41,8 @@ class App extends Component {
               <Route exact path='/register' component={Register} />
               <Switch>
                 <PrivateRoute exact path='/dashboard' component={Dashboard} />
+              </Switch>
+              <Switch>
                 <PrivateRoute
                   exact
                   path='/create-profile'
