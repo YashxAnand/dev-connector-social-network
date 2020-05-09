@@ -9,8 +9,6 @@ const passport = require("passport");
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 
-router.get("/test", (req, res) => res.json({ msg: "User works" }));
-
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -20,7 +18,7 @@ router.post("/register", (req, res) => {
 
   const { name, email, password } = req.body;
   User.findOne({ email })
-    .then((user) => {
+    .then(user => {
       if (user) {
         errors.email = "Email already in use";
         return res.status(400).json(errors);
@@ -44,13 +42,13 @@ router.post("/register", (req, res) => {
             user.password = hash;
             user
               .save()
-              .then((user) => res.send(user))
-              .catch((err) => conso.log(err));
+              .then(user => res.send(user))
+              .catch(err => console.log(err));
           });
         });
       }
     })
-    .catch((err) => console.log(err.message));
+    .catch(err => console.log(err.message));
 });
 
 router.post("/login", (req, res) => {
@@ -62,13 +60,13 @@ router.post("/login", (req, res) => {
 
   const { email, password } = req.body;
 
-  User.findOne({ email }).then((user) => {
+  User.findOne({ email }).then(user => {
     if (!user) {
       errors.email = "User not found";
       return res.status(404).json(errors);
     }
 
-    bcrypt.compare(password, user.password).then((isMatch) => {
+    bcrypt.compare(password, user.password).then(isMatch => {
       if (!isMatch) {
         errors.password = "Incorrect password";
         return res.status(400).json(errors);
@@ -83,7 +81,7 @@ router.post("/login", (req, res) => {
       jwt.sign(
         payload,
         keys.secretOrKey,
-        { expiresIn: 36000 },
+        { expiresIn: 360000 },
         (err, token) => {
           res.json({
             success: true,
