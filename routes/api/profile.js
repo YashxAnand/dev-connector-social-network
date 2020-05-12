@@ -18,14 +18,14 @@ router.get(
 
     Profile.findOne({ user: req.user.id })
       .populate("user", ["name", "avatar"])
-      .then((profile) => {
+      .then(profile => {
         if (!profile) {
           errors.profile = "Profile does not exist for this user";
           return res.status(404).json(errors);
         }
         res.send(profile);
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -35,7 +35,7 @@ router.get("/handle/:handle", (req, res) => {
   const errors = {};
   Profile.findOne({ handle: req.params.handle })
     .populate("user", ["name", "avatar"])
-    .then((profile) => {
+    .then(profile => {
       if (!profile) {
         errors.noprofile = "No profile found";
         return res.status(404).json(errors);
@@ -43,7 +43,7 @@ router.get("/handle/:handle", (req, res) => {
 
       res.json(profile);
     })
-    .catch((err) => res.status(400).json(err));
+    .catch(err => res.status(400).json(err));
 });
 
 //Get profile by id
@@ -52,7 +52,7 @@ router.get("/user/:id", (req, res) => {
   const errors = {};
   Profile.findOne({ user: req.params.id })
     .populate("user", ["name", "avatar"])
-    .then((profile) => {
+    .then(profile => {
       if (!profile) {
         errors.noprofile = "No profile found";
         return res.status(404).json(errors);
@@ -60,25 +60,25 @@ router.get("/user/:id", (req, res) => {
 
       res.json(profile);
     })
-    .catch((err) =>
+    .catch(err =>
       res.status(400).json({ profile: "There is no profile for this user" })
     );
 });
 
 //Get all profiles
-//@route /api/profiles/all
+//@route /api/profile/all
 router.get("/all", (req, res) => {
   const errors = {};
   Profile.find()
     .populate("user", ["name", "avatar"])
-    .then((profiles) => {
+    .then(profiles => {
       if (!profiles) {
         errors.profile("There are no profiles");
         return res.json(errors);
       }
       res.json(profiles);
     })
-    .catch((err) => res.json(err));
+    .catch(err => res.json(err));
 });
 
 //Register profile
@@ -113,20 +113,20 @@ router.post(
     if (req.body.youtube) profileFields.social.youtube = req.body.youtube;
     if (req.body.twitter) profileFields.social.twitter = req.body.twitter;
     if (req.body.facebook) profileFields.social.facebook = req.body.facebook;
-    if (req.body.instagram) profileFields.social.linkedin = req.body.linkedin;
-    if (req.body.linkedin) profileFields.social.instagram = req.body.instagram;
+    if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
+    if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
-    Profile.findOne({ user: profileFields.user }).then((profile) => {
+    Profile.findOne({ user: profileFields.user }).then(profile => {
       if (profile) {
         Profile.findOneAndUpdate(
           { user: profileFields.user },
           { $set: profileFields },
           { new: true }
-        ).then((profile) => {
+        ).then(profile => {
           res.json(profile);
         });
       } else {
-        Profile.findOne({ handle: profileFields.handle }).then((profile) => {
+        Profile.findOne({ handle: profileFields.handle }).then(profile => {
           if (profile) {
             errors.handle = "This handle is already in use";
             res.status(400).json(errors);
@@ -134,10 +134,10 @@ router.post(
             const newProfile = new Profile(profileFields);
             newProfile
               .save()
-              .then((profile) => {
+              .then(profile => {
                 res.json(profile);
               })
-              .catch((err) => console.log(err));
+              .catch(err => console.log(err));
           }
         });
       }
@@ -158,7 +158,7 @@ router.post(
     }
 
     Profile.findOne({ user: req.user.id })
-      .then((profile) => {
+      .then(profile => {
         if (!profile) {
           errors.profile = "Profile not found";
           return res.json(errors);
@@ -177,10 +177,10 @@ router.post(
         profile.experience.unshift(newExp);
         profile
           .save()
-          .then((profile) => res.json(profile))
-          .catch((err) => res.status(400).json(err));
+          .then(profile => res.json(profile))
+          .catch(err => res.status(400).json(err));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -197,7 +197,7 @@ router.post(
     }
 
     Profile.findOne({ user: req.user.id })
-      .then((profile) => {
+      .then(profile => {
         if (!profile) {
           errors.profile = "Profile not found";
           return res.json(errors);
@@ -216,10 +216,10 @@ router.post(
         profile.education.unshift(newEdu);
         profile
           .save()
-          .then((profile) => res.json(profile))
-          .catch((err) => res.status(400).json(err));
+          .then(profile => res.json(profile))
+          .catch(err => res.status(400).json(err));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -231,19 +231,19 @@ router.delete(
   (req, res) => {
     const errors = {};
 
-    Profile.findOne({ user: req.user.id }).then((profile) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
       if (!profile) {
         errors.profile = "Profile not found";
         return res.status(404).json(errors);
       }
 
       const removeIndex = profile.experience
-        .map((item) => item.id)
+        .map(item => item.id)
         .indexOf(req.params.exp_id);
 
       profile.experience.splice(removeIndex, 1);
 
-      profile.save().then((profile) => res.json(profile));
+      profile.save().then(profile => res.json(profile));
     });
   }
 );
@@ -255,19 +255,19 @@ router.delete(
   (req, res) => {
     const errors = {};
 
-    Profile.findOne({ user: req.user.id }).then((profile) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
       if (!profile) {
         errors.profile = "Profile not found";
         return res.status(404).json(errors);
       }
 
       const removeIndex = profile.education
-        .map((item) => item.id)
+        .map(item => item.id)
         .indexOf(req.params.edu_id);
 
       profile.education.splice(removeIndex, 1);
 
-      profile.save().then((profile) => res.json(profile));
+      profile.save().then(profile => res.json(profile));
     });
   }
 );

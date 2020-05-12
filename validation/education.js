@@ -1,6 +1,6 @@
 const isEmpty = require("./is-empty");
 
-module.exports = validateEducationInput = (data) => {
+module.exports = validateEducationInput = data => {
   const errors = {};
 
   if (isEmpty(data.school)) {
@@ -16,7 +16,7 @@ module.exports = validateEducationInput = (data) => {
   }
 
   if (isEmpty(data.fieldofstudy)) {
-    errors.from = "Field of study is required";
+    errors.fieldofstudy = "Field of study is required";
   }
 
   return {

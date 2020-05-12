@@ -21,6 +21,7 @@ const TextFieldGroup = ({
           "is-invalid": errors,
         })}
         placeholder={placeholder}
+        disabled={disabled}
         name={name}
         value={value}
         onChange={onChange}

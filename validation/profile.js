@@ -1,7 +1,7 @@
 const validator = require("validator");
 const isEmpty = require("./is-empty");
 
-const validateProfileInput = (data) => {
+const validateProfileInput = data => {
   const errors = {};
 
   if (isEmpty(data.handle)) {
@@ -51,7 +51,7 @@ const validateProfileInput = (data) => {
   }
 
   if (!isEmpty(data.linkedin)) {
-    if (!validator.isURL(data.linekdin)) {
+    if (!validator.isURL(data.linkedin)) {
       errors.linkedin = "linkedin URL not valid";
     }
   }

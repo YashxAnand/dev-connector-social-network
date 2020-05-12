@@ -21,9 +21,10 @@ mongoose
   .connect(db, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
   })
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));
 
 //Config passport
 app.use(passport.initialize());
