@@ -24,7 +24,7 @@ router.post(
       user: req.user.id,
     });
 
-    newPost.save().then((post) => res.json(post));
+    newPost.save().then(post => res.json(post));
   }
 );
 
@@ -34,7 +34,7 @@ router.get("/", (req, res) => {
 
   Posts.find()
     .sort({ date: -1 })
-    .then((posts) => {
+    .then(posts => {
       if (!posts) {
         errors.posts = "No posts found";
         return res.status(404).json(errors);
@@ -49,7 +49,7 @@ router.get("/:id", (req, res) => {
   const errors = {};
 
   Posts.findById(req.params.id)
-    .then((post) => {
+    .then(post => {
       if (!post) {
         errors.post = "No posts found";
         return res.status(404).json(errors);
@@ -57,7 +57,7 @@ router.get("/:id", (req, res) => {
 
       res.send(post);
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 });
 
 //Delete a post
@@ -66,7 +66,7 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Posts.findById({ _id: req.params.id })
-      .then((post) => {
+      .then(post => {
         if (!post) {
           return res.status(404).json({ error: "Post not found" });
         }
@@ -79,7 +79,7 @@ router.delete(
 
         post.remove().then(() => res.json({ success: true }));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -90,13 +90,13 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Posts.findById({ _id: req.params.id })
-      .then((post) => {
+      .then(post => {
         if (!post) {
           return res.status(404).json({ error: "Post not found" });
         }
 
         if (
-          post.likes.filter((like) => like.user.toString() === req.user.id)
+          post.likes.filter(like => like.user.toString() === req.user.id)
             .length > 0
         ) {
           return res.json({
@@ -106,9 +106,9 @@ router.post(
 
         post.likes.unshift({ user: req.user.id });
 
-        post.save().then((post) => res.json(post));
+        post.save().then(post => res.json(post));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -119,28 +119,28 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Posts.findById(req.params.id)
-      .then((post) => {
+      .then(post => {
         if (!post) {
           return res.status(404).json({ error: "Post not found" });
         }
 
         if (
-          post.likes.filter((like) => like.user.toString() === req.user.id)
+          post.likes.filter(like => like.user.toString() === req.user.id)
             .length === 0
         ) {
           return res.json({ notliked: "User have not liked this post" });
         }
 
         const removeIndex = post.likes
-          .map((like) => like.user)
+          .map(like => like.user)
           .indexOf(req.user.id);
         post.likes.splice(removeIndex, 1);
         post
           .save()
-          .then((post) => res.json(post))
-          .catch((err) => console.log(err));
+          .then(post => res.json(post))
+          .catch(err => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -156,7 +156,7 @@ router.post(
       return res.status(400).json(errors);
     }
     Posts.findOne({ _id: req.params.id })
-      .then((post) => {
+      .then(post => {
         if (!post) {
           return res.status(404).json({ nopost: "No post found" });
         }
@@ -171,10 +171,10 @@ router.post(
         post.comments.unshift(newComment);
         post
           .save()
-          .then((post) => res.json(post))
-          .catch((err) => console.log(err));
+          .then(post => res.json(post))
+          .catch(err => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
@@ -185,31 +185,31 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Posts.findById(req.params.id)
-      .then((post) => {
+      .then(post => {
         if (!post) {
           return res.status(404).json({ error: "Post not found" });
         }
 
         if (
           post.comments.filter(
-            (comment) => comment.user.toString() === req.user.id
+            comment => comment.user.toString() === req.user.id
           ).length === 0
         ) {
           return res.json({ nocomment: "User does not have any comment" });
         }
 
         const removeIndex = post.comments
-          .map((item) => item._id)
+          .map(item => item._id)
           .indexOf(req.params.comment_id);
 
         post.comments.splice(removeIndex, 1);
 
         post
           .save()
-          .then((post) => res.json(post))
-          .catch((err) => console.log(err));
+          .then(post => res.json(post))
+          .catch(err => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   }
 );
 
